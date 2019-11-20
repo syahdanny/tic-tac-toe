@@ -1,6 +1,11 @@
 package tictactoe;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -8,9 +13,10 @@ import java.util.Random;
  */
 public class TicTacToe extends javax.swing.JFrame {
     
-    private final String o = "O";
-    private final String x = "X";
-    private int currentPlayer;
+    private static final String o = "O";
+    private static final String x = "X";
+    private static int currentPlayer = -1;
+    private JOptionPane jOptionPane1;
 
     /**
      * Creates new form TicTacToe
@@ -26,6 +32,7 @@ public class TicTacToe extends javax.swing.JFrame {
         jButton7.setEnabled(false);
         jButton8.setEnabled(false);
         jButton9.setEnabled(false);
+        jButton10.setEnabled(false);
     }
 
     /**
@@ -51,6 +58,7 @@ public class TicTacToe extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
@@ -177,6 +185,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton4.setEnabled(false);
+        kirim("4");
         endGame();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -192,6 +201,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton8.setEnabled(false);
+        kirim("8");
         endGame();
     }//GEN-LAST:event_jButton8ActionPerformed
 
@@ -201,8 +211,10 @@ public class TicTacToe extends javax.swing.JFrame {
         currentPlayer = random.nextInt(2);
         if (currentPlayer == 0) {
             jLabel1.setText("Giliran Player 1");
+            kirim(".");
         } else {
             jLabel1.setText("Giliran Player 2");
+            kirim(",");
         }
         acak();
     }//GEN-LAST:event_jButton10ActionPerformed
@@ -219,6 +231,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton1.setEnabled(false);
+        kirim("1");
         endGame();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -234,6 +247,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton2.setEnabled(false);
+        kirim("2");
         endGame();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -249,6 +263,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton3.setEnabled(false);
+        kirim("3");
         endGame();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -264,6 +279,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton5.setEnabled(false);
+        kirim("5");
         endGame();
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -279,6 +295,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton6.setEnabled(false);
+        kirim("6");
         endGame();
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -294,6 +311,7 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton7.setEnabled(false);
+        kirim("7");
         endGame();
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -309,10 +327,11 @@ public class TicTacToe extends javax.swing.JFrame {
             jLabel1.setText("Giliran Player 1");
         }
         jButton9.setEnabled(false);
+        kirim("9");
         endGame();
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void acak() {
+    private static void acak() {
         jButton10.setEnabled(false);
         jButton1.setEnabled(true);
         jButton2.setEnabled(true);
@@ -334,7 +353,7 @@ public class TicTacToe extends javax.swing.JFrame {
         jButton9.setText("");
     }
     
-    private void win() {
+    private static void win() {
         if ((jButton1.getText().equals(o) && jButton2.getText().equals(o) &&
                 jButton3.getText().equals(o)) || (jButton1.getText().equals(o) && 
                 jButton4.getText().equals(o) && jButton7.getText().equals(o)) ||
@@ -357,7 +376,10 @@ public class TicTacToe extends javax.swing.JFrame {
             jButton7.setEnabled(false);
             jButton8.setEnabled(false);
             jButton9.setEnabled(false);
-            jButton10.setEnabled(true);
+            JOptionPane.showMessageDialog(null, "Player 1 menang", "Alert", JOptionPane.ERROR_MESSAGE);
+            if (currentPlayer == 0 || currentPlayer == 1) {
+                currentPlayer = -1;
+            }
         } else if ((jButton1.getText().equals(x) && jButton2.getText().equals(x) &&
                 jButton3.getText().equals(x)) || (jButton1.getText().equals(x) && 
                 jButton4.getText().equals(x) && jButton7.getText().equals(x)) ||
@@ -380,21 +402,101 @@ public class TicTacToe extends javax.swing.JFrame {
             jButton7.setEnabled(false);
             jButton8.setEnabled(false);
             jButton9.setEnabled(false);
-            jButton10.setEnabled(true);
-        } else  if (!jButton1.isEnabled() && !jButton2.isEnabled() && !jButton3.isEnabled()
-                && !jButton4.isEnabled() && !jButton5.isEnabled() && !jButton6.isEnabled()
-                && !jButton7.isEnabled() && !jButton8.isEnabled() && !jButton9.isEnabled()) {
+            JOptionPane.showMessageDialog(null, "Player 2 menang", "Alert", JOptionPane.ERROR_MESSAGE);
+            if (currentPlayer == 0 || currentPlayer == 1) {
+                currentPlayer = -1;
+            }
+        } else  if (!jButton1.getText().equals("") && !jButton2.getText().equals("") && !jButton3.getText().equals("")
+                && !jButton4.getText().equals("") && !jButton5.getText().equals("") && !jButton6.getText().equals("")
+                && !jButton7.getText().equals("") && !jButton8.getText().equals("") && !jButton9.getText().equals("")) {
             jLabel1.setText("Seri!");
-            jButton10.setEnabled(true);
+            JOptionPane.showMessageDialog(null, "Seri", "Alert", JOptionPane.ERROR_MESSAGE);
+            if (currentPlayer == 0 || currentPlayer == 1) {
+                currentPlayer = -1;
+            }
         }
     }
     
-    private void endGame() {
+    private static void setDisabled() {
+        jButton1.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
+        jButton4.setEnabled(false);
+        jButton5.setEnabled(false);
+        jButton6.setEnabled(false);
+        jButton7.setEnabled(false);
+        jButton8.setEnabled(false);
+        jButton9.setEnabled(false);
+    }
+    
+    private static void cekButton() {
+        if (jButton1.getText().equals("")) {
+            jButton1.setEnabled(true);
+        } else {
+            jButton1.setEnabled(false);
+        }
+        if (jButton2.getText().equals("")) {
+            jButton2.setEnabled(true);
+        } else {
+            jButton2.setEnabled(false);
+        }
+        if (jButton3.getText().equals("")) {
+            jButton3.setEnabled(true);
+        } else {
+            jButton3.setEnabled(false);
+        }
+        if (jButton4.getText().equals("")) {
+            jButton4.setEnabled(true);
+        } else {
+            jButton4.setEnabled(false);
+        }
+        if (jButton5.getText().equals("")) {
+            jButton5.setEnabled(true);
+        } else {
+            jButton5.setEnabled(false);
+        }
+        if (jButton6.getText().equals("")) {
+            jButton6.setEnabled(true);
+        } else {
+            jButton6.setEnabled(false);
+        }
+        if (jButton7.getText().equals("")) {
+            jButton7.setEnabled(true);
+        } else {
+            jButton7.setEnabled(false);
+        }
+        if (jButton8.getText().equals("")) {
+            jButton8.setEnabled(true);
+        } else {
+            jButton8.setEnabled(false);
+        }
+        if (jButton9.getText().equals("")) {
+            jButton9.setEnabled(true);
+        } else {
+            jButton9.setEnabled(false);
+        }
+    }
+    
+    private static void endGame() {
         if (!jButton1.isEnabled() || !jButton2.isEnabled() || !jButton3.isEnabled()
                 || !jButton4.isEnabled() || !jButton5.isEnabled() || !jButton6.isEnabled()
                 || !jButton7.isEnabled() || !jButton8.isEnabled() || !jButton9.isEnabled()) {
             win();
         }
+    }
+    
+    private void kirim(String index) {
+        try {
+            InetAddress ia = InetAddress.getByName("192.168.1.37");
+            int Port = 2134;
+            String s = String.valueOf(index);
+            byte[] b = s.getBytes();
+            DatagramPacket dp = new DatagramPacket(b, b.length, ia, Port);
+            DatagramSocket sender = new DatagramSocket();
+            sender.send(dp);
+        } catch (IOException e) {
+        }
+        setDisabled();
     }
     
     /**
@@ -430,20 +532,164 @@ public class TicTacToe extends javax.swing.JFrame {
                 new TicTacToe().setVisible(true);
             }
         });
+        
+        try {
+            byte[] buffer = new byte[500];
+            DatagramPacket incoming = new DatagramPacket(buffer,buffer.length);
+            DatagramSocket ds = new DatagramSocket(2134);
+            while (true) {                
+                ds.receive(incoming);
+                byte[] data = incoming.getData();
+                String s = new String(data, 0, data.length);
+                String ss = s.trim();
+                System.out.println(ss);
+                if (currentPlayer == -1) {
+                    if (ss.equals(".")) {
+                        currentPlayer = 0;
+                        jLabel1.setText("Giliran Player 1");
+                        setDisabled();
+                    } else {
+                        currentPlayer = 1;
+                        jLabel1.setText("Giliran Player 2");
+                    }
+                    acak();
+                } else {          
+                    cekButton();
+                    if (ss.equals("1")) {
+                        if (currentPlayer == 0) {
+                            jButton1.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton1.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton1.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("2")) {
+                        if (currentPlayer == 0) {
+                            jButton2.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton2.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton2.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("3")) {
+                        if (currentPlayer == 0) {
+                            jButton3.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton3.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton3.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("4")) {
+                        if (currentPlayer == 0) {
+                            jButton4.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton4.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton4.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("5")) {
+                        if (currentPlayer == 0) {
+                            jButton5.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton5.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton5.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("6")) {
+                        if (currentPlayer == 0) {
+                            jButton6.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton6.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton6.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("7")) {
+                        if (currentPlayer == 0) {
+                            jButton7.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton7.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton7.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("8")) {
+                        if (currentPlayer == 0) {
+                            jButton8.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton8.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton8.setEnabled(false);
+                        endGame();
+                    }
+                    if (ss.equals("9")) {
+                        if (currentPlayer == 0) {
+                            jButton9.setText(o);
+                            currentPlayer = 1;
+                            jLabel1.setText("Giliran Player 2");
+                        } else {
+                            jButton9.setText(x);
+                            currentPlayer = 0;
+                            jLabel1.setText("Giliran Player 1");
+                        }
+                        jButton9.setEnabled(false);
+                        endGame();
+                    }
+                }
+            }
+        } catch (IOException e) {
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel1;
+    private static javax.swing.JButton jButton1;
+    private static javax.swing.JButton jButton10;
+    private static javax.swing.JButton jButton2;
+    private static javax.swing.JButton jButton3;
+    private static javax.swing.JButton jButton4;
+    private static javax.swing.JButton jButton5;
+    private static javax.swing.JButton jButton6;
+    private static javax.swing.JButton jButton7;
+    private static javax.swing.JButton jButton8;
+    private static javax.swing.JButton jButton9;
+    private static javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }
